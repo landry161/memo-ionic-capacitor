@@ -24,6 +24,7 @@
     "@awesome-cordova-plugins/core": "^6.3.0",
     "@awesome-cordova-plugins/sqlite": "^6.3.0",
     "@capacitor-community/sqlite": "^5.0.1",
+    "@capacitor/action-sheet": "^5.0.4",
     "@capacitor/android": "5.0.4",
     "@capacitor/app": "5.0.2",
     "@capacitor/core": "5.0.4",

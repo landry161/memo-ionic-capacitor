@@ -26,19 +26,19 @@ export class SQLiteService {
       location:"default",
     }).then((db:SQLiteObject)=>
     {
-      db.executeSql("CREATE TABLE tasks(id INTEGER PRIMARY KEY AUTOINCREMENT,libelle TEXT NOT NULL,datefin TEXT NOT NULL)",[]).then((data)=>{
-        alert("Création effectuée avec succès");
+      db.executeSql("CREATE TABLE tasks(id INTEGER PRIMARY KEY AUTOINCREMENT,libelle TEXT NOT NULL,datecreated DATETIME,duree INTEGER NOT NULL,description TEXT NOT NULL)",[]).then((data)=>{
+        console.log("Création effectuée avec succès");
       },error=>{
-        alert("Erreur de création "+JSON.stringify(error));
+        //alert("Erreur de création "+JSON.stringify(error));
       });
     },error=>{
-      alert("Erreur encore "+JSON.stringify(error));
+      console.log("Erreur encore "+JSON.stringify(error));
     });
   }
 
   //Insert
-  async insertTasks(task:any,datefin:any){
-
+  async insertTasks(libelle:string,duree:any,description:string)
+  {  
     return new Promise((success,fail)=>
     {
       let myTasks:any[];
@@ -48,7 +48,7 @@ export class SQLiteService {
         location:"default"
       }).then((db:SQLiteObject)=>
       {
-        db.executeSql("INSERT INTO tasks(libelle,datefin) VALUES(?,?)",[task,datefin]).then((resultInsert)=>{
+        db.executeSql("INSERT INTO tasks(libelle,datecreated,duree,description) VALUES(?,?,?,?)",[libelle,new Date().toUTCString(),duree,description]).then((resultInsert)=>{
           success(resultInsert.insertId);
         }).catch(error=>{
           fail(error);
@@ -60,7 +60,7 @@ export class SQLiteService {
   }
 
   //Liste
-    getTasks()
+  getTasks()
   {
     var myTasks=Array();
     return new Promise((result,fail)=>
@@ -70,24 +70,19 @@ export class SQLiteService {
         name:"ionic-capacitor.db",
         location:"default"
       }).then((db:SQLiteObject)=>{
-        db.executeSql("SELECT id,libelle,datefin FROM tasks",[]).then((resultTasks)=>
+        db.executeSql("SELECT id,libelle,datecreated,duree,description FROM tasks",[]).then((resultTasks)=>
         {
-          alert(" Rows "+JSON.stringify(resultTasks));
           for(let index=0;index<resultTasks.rows.length;index++)
           {
-            //alert("Voici le resultat "+JSON.stringify(resultTasks.rows.item(index)));
-            //myTasks.push(resultTasks.rows.item(index));
-            //alert("Compteur "+index);
-            //alert("Voici le resultat "+JSON.stringify(resultTasks.rows.item(index)));
             myTasks.push(resultTasks.rows.item(index));
           }
-
-          //alert(myTasks);
+          //alert(JSON.stringify(myTasks));
           result(myTasks);
         }).catch((error)=>{
           fail(error);
         });
-      }).catch((error)=>{
+      }).catch((error)=>
+      {
         fail(error);
       });
     });

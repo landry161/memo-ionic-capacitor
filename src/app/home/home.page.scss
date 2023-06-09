@@ -30,8 +30,9 @@
   padding:1px;
   height: 100%;
   width: 100%;
-  background-image:url("../../assets/img/bgpyramides.jpg");
+  background-image:url("../../assets/img/bgpyramide.jpg");
   background-repeat: no-repeat;
+  display:block;
   background-size: cover;
 }
 
@@ -39,6 +40,11 @@ h1{
   color:white;
   margin-left:20px;
   font-size:30px;
+}
+
+ion-input.custom{
+  --background: #373737;
+  --color: #fff;
 }
 
 h5{

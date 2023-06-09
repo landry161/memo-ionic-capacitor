@@ -17,26 +17,56 @@
     <h1><b>Aujourd'hui</b></h1>
     <h5>{{currentDate}}</h5>
 
-<ion-card *ngIf="addTask">
+  <ion-card *ngIf="addTask">
+    <ion-item>
+      <ion-label position="floating" color="primary">Libellé</ion-label>
+      <ion-input placeholder="Entrez le libellé" [(ngModel)]="memo.libelle" type="text"></ion-input>
+    </ion-item>
+   
+    <ion-item>
+      <ion-label position="floating" color="primary">Description</ion-label>
+      <ion-textarea placeholder="Description de votre tâche" [(ngModel)]="memo.description"></ion-textarea>
+    </ion-item>
+
+     <ion-item>
+       <ion-label position="floating" color="primary">Durée</ion-label>
+      <ion-input placeholder="Durée (jours)" [(ngModel)]="memo.duree" type="number"></ion-input>
+    </ion-item>
+
+    <!--ion-item>
+        <ion-label style="color:#5a8ca4;">Date de fin</ion-label>
+        <ion-datetime-button slot="end"  shape="round" datetime="datetime"></ion-datetime-button>
+
+    <ion-modal [keepContentsMounted]="true">
+      <ng-template>
+        <ion-datetime presentation="date" id="datetime"></ion-datetime>
+      </ng-template>
+    </ion-modal>
+    </ion-item-->
+
+    <!-- These validations are for the form group -->
+    <ion-button color="primary" class="submit-btn" expand="block" (click)="addTasks()" [disabled]="!memo.libelle || !memo.description || !memo.duree">Enregistrer</ion-button>
+  </ion-card>
+
+       <!--ion-card *ngIf="addTask">
         <ion-item lines="none">
-           <ion-input [(ngModel)]="task" placeholder="Entrez une tâche"></ion-input>
+           <ion-input class="custom" [(ngModel)]="task" placeholder="Entrez une tâche"></ion-input>
+           <ion-textarea [autoGrow]="true"></ion-textarea>
            <ion-button (click)="addTasks()" slot="end" shape="round">
              <ion-icon slot="icon-only" name="add"></ion-icon>
            </ion-button>
         </ion-item>
-    </ion-card>
+    </ion-card-->
 
-    <ion-card *ngFor="let task of tasks">
+    <ion-card *ngFor="let task of tasks" (click)="details(task.id,task.duree,task.description,task.datecreated)">
   <ion-item lines="none">
     <ion-checkbox color="success" slot="start"></ion-checkbox>
     <ion-label>
       <h2>{{task.libelle}}</h2>
-      <p>{{task.datefin}}</p>
+      <p>{{task.duree}} jour(s)</p>
     </ion-label>
   </ion-item>
 </ion-card>
-
-    
 
   <!--ion-button *ngIf="!addTask" (click)="showForm()" expand="block" class="add-button">
   <ion-icon name="add" slot="start"></ion-icon>

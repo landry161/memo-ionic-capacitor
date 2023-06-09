@@ -3,7 +3,7 @@ import {CapacitorSQLite,JsonSQLite} from "@capacitor-community/sqlite";
 import {SQLiteService} from "../sqlite.service";
 import { LoadingController } from '@ionic/angular';
 import { Toast } from '@capacitor/toast';
-//import { posix } from 'path';
+import { ActionSheet, ActionSheetButtonStyle } from '@capacitor/action-sheet';
 
 @Component({
   selector: 'app-home',
@@ -14,33 +14,48 @@ import { Toast } from '@capacitor/toast';
 export class HomePage
 {
   task:string="";
-  myTask='';
+  memo={libelle:"",description:"",duree:"",datecreated:""};
   addTask: boolean=false;
   tasks=Array();
-
   currentDate:string;
+  
   constructor(private loader:LoadingController,private _sqlite:SQLiteService)
   {
     const date= new Date();
     const options={ weekday:'long',month:'long',day:'numeric'};
     this.currentDate=date.toLocaleDateString("fr-FR",{day:"numeric",weekday:"long",month:"long"});
-
     this.getAllTasks();
+    
+  }
+
+  //
+  async details(id:any,duree:any,description:any,datecreated:any){
+    const result = await ActionSheet.showActions({
+      title: 'Photo Options',
+      message: 'Select an option to perform',
+      options: [
+        {
+          title: 'Upload',
+        },
+        {
+          title: 'Share',
+        },
+        {
+          title: 'Remove',
+          style: ActionSheetButtonStyle.Destructive,
+        },
+      ],
+    });
   }
 
   ///
   addTasks(){
-    const date=new Date();
-    const finalDate=date.getFullYear()+"-"+date.getMonth()+"-"+date.getDate();
-    /*this.tasks.push({libelle:this.task,datefin:finalDate});
-    this.task="";
-    this.showForm();*/
-    this._sqlite.insertTasks(this.task,finalDate).then((success)=>
+    //this.tasks.push({libelle:this.memo.libelle,duree:this.memo.duree});
+    this._sqlite.insertTasks(this.memo.libelle,this.memo.duree,this.memo.description).then((success)=>
     {
       this.showToast("Tâche ajoutée avec succès");
-      this.tasks.push({libelle:this.task,datefin:finalDate});
-      this.task="";
-      this.showForm();
+      this.tasks.push({libelle:this.memo.libelle,duree:this.memo.duree});
+      this.makeEmptyField();
     },error=>
     {
       this.showToast("Ajout de tâche impossible. Pensez à vérifier vos informations");
@@ -49,7 +64,30 @@ export class HomePage
 
   showForm(){
     this.addTask = !this.addTask;
-    this.myTask = '';
+    //this.myTask = ''; 
+  }
+
+  async actionSheet(){
+    const result= await ActionSheet.showActions({
+      title:"Actions",
+      message:"Message ici",
+      options:[{
+        title:"Option 1"
+      },{
+        title:"Option 2"
+      },{
+        title:"Option 3"
+      }]
+    }).then((res:any)=>{
+      alert("Ok");
+    });
+    return result;
+  }
+
+  //
+  makeEmptyField()
+  {
+    this.memo={libelle:"",description:"",duree:"",datecreated:""};
   }
 
   //Liste des Tasks
@@ -63,10 +101,9 @@ export class HomePage
     loading.present();
     this._sqlite.getTasks().then((result)=>
     {
-      alert("JSON RESULTAT "+JSON.stringify(result));
+      //alert("JSON RESULTAT "+JSON.stringify(result));
       this.tasks=<Array<Object>>result;
       loading.dismiss();
-
     },error=>
     {
       alert("Erreur de sélection "+JSON.stringify(error));
@@ -86,5 +123,7 @@ export class HomePage
   //Retry
    getRefreshAllTasks(){
     this.getAllTasks();
+    this.addTask=false;
+    this.actionSheet();
    }
 }
