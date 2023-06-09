@@ -1,0 +1,8 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "Memo-sqlite-ionic-capacitor",
+	"webDir": "www",
+	"server": {
+		"androidScheme": "https"
+	}
+}

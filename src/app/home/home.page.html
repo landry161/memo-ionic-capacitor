@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>
+      Memo - Ionic Capacitor
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="getRefreshAllTasks()">
+        <ion-icon name="refresh" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  
+  <div class="img-bg">
+    <h1><b>Aujourd'hui</b></h1>
+    <h5>{{currentDate}}</h5>
+
+<ion-card *ngIf="addTask">
+        <ion-item lines="none">
+           <ion-input [(ngModel)]="task" placeholder="Entrez une tâche"></ion-input>
+           <ion-button (click)="addTasks()" slot="end" shape="round">
+             <ion-icon slot="icon-only" name="add"></ion-icon>
+           </ion-button>
+        </ion-item>
+    </ion-card>
+
+    <ion-card *ngFor="let task of tasks">
+  <ion-item lines="none">
+    <ion-checkbox color="success" slot="start"></ion-checkbox>
+    <ion-label>
+      <h2>{{task.libelle}}</h2>
+      <p>{{task.datefin}}</p>
+    </ion-label>
+  </ion-item>
+</ion-card>
+
+    
+
+  <!--ion-button *ngIf="!addTask" (click)="showForm()" expand="block" class="add-button">
+  <ion-icon name="add" slot="start"></ion-icon>
+  Ajouter une tâche
+</ion-button>
+
+<ion-button *ngIf="addTask" (click)="showForm()" expand="block" class="add-button">
+  <ion-icon name="close" slot="start"></ion-icon>
+  Annuler
+</ion-button-->
+    
+  </div>
+</ion-content>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button *ngIf="!addTask" (click)="showForm()">
+      <ion-icon name="add-circle"></ion-icon>
+    </ion-fab-button>
+
+     <ion-fab-button *ngIf="addTask" (click)="showForm()">
+      <ion-icon name="remove-circle"></ion-icon>
+    </ion-fab-button>
+
+    <!--ion-fab-list side="top">
+      <ion-fab-button>
+        <ion-icon name="document"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="color-palette"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="globe"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list-->
+  </ion-fab>
