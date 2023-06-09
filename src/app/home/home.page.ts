@@ -79,7 +79,7 @@ export class HomePage
         title:"Option 3"
       }]
     }).then((res:any)=>{
-      alert("Ok");
+      //alert("Ok");
     });
     return result;
   }
@@ -124,6 +124,5 @@ export class HomePage
    getRefreshAllTasks(){
     this.getAllTasks();
     this.addTask=false;
-    this.actionSheet();
    }
 }
