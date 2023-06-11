@@ -33,34 +33,43 @@
       <ion-input placeholder="Durée (jours)" [(ngModel)]="memo.duree" type="number"></ion-input>
     </ion-item>
 
-    <!--ion-item>
-        <ion-label style="color:#5a8ca4;">Date de fin</ion-label>
-        <ion-datetime-button slot="end"  shape="round" datetime="datetime"></ion-datetime-button>
-
-    <ion-modal [keepContentsMounted]="true">
-      <ng-template>
-        <ion-datetime presentation="date" id="datetime"></ion-datetime>
-      </ng-template>
-    </ion-modal>
-    </ion-item-->
-
     <!-- These validations are for the form group -->
     <ion-button color="primary" class="submit-btn" expand="block" (click)="addTasks()" [disabled]="!memo.libelle || !memo.description || !memo.duree">Enregistrer</ion-button>
   </ion-card>
 
-       <!--ion-card *ngIf="addTask">
-        <ion-item lines="none">
-           <ion-input class="custom" [(ngModel)]="task" placeholder="Entrez une tâche"></ion-input>
-           <ion-textarea [autoGrow]="true"></ion-textarea>
-           <ion-button (click)="addTasks()" slot="end" shape="round">
-             <ion-icon slot="icon-only" name="add"></ion-icon>
-           </ion-button>
-        </ion-item>
-    </ion-card-->
+  <ion-card *ngIf="toUpdate">
+    <ion-item>
+      <ion-label position="floating" color="primary">Libellé</ion-label>
+      <ion-input placeholder="Entrez le libellé" [(ngModel)]="memoUpdate.libelle" type="text"></ion-input>
+    </ion-item>
+   
+    <ion-item>
+      <ion-label position="floating" color="primary">Description</ion-label>
+      <ion-textarea placeholder="Description de votre tâche" [(ngModel)]="memoUpdate.description"></ion-textarea>
+    </ion-item>
 
-    <ion-card *ngFor="let task of tasks" (click)="details(task.id,task.duree,task.description,task.datecreated)">
+     <ion-item>
+       <ion-label position="floating" color="primary">Durée</ion-label>
+      <ion-input placeholder="Durée (jours)" [(ngModel)]="memoUpdate.duree" type="number"></ion-input>
+    </ion-item>
+
+
+    <!-- These validations are for the form group -->
+    <ion-button color="primary" class="submit-btn" expand="block" (click)="updateTask()" [disabled]="!memoUpdate.libelle || !memoUpdate.description || !memoUpdate.duree">Modifier</ion-button>
+  </ion-card>
+  
+  <ion-card *ngFor="let task of tasks">
   <ion-item lines="none">
-    <ion-checkbox color="success" slot="start"></ion-checkbox>
+       <ion-buttons slot="end">
+      <ion-button (click)="detailsTask(task.id,task.libelle,task.duree,task.description)">
+        <ion-icon name="create" slot="icon-only"></ion-icon>
+      </ion-button>
+
+      <ion-button (click)="delete(task.id)">
+        <ion-icon name="trash" slot="icon-only"></ion-icon>
+      </ion-button>
+
+    </ion-buttons>
     <ion-label>
       <h2>{{task.libelle}}</h2>
       <p>{{task.duree}} jour(s)</p>
@@ -89,15 +98,4 @@
       <ion-icon name="remove-circle"></ion-icon>
     </ion-fab-button>
 
-    <!--ion-fab-list side="top">
-      <ion-fab-button>
-        <ion-icon name="document"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-button>
-        <ion-icon name="color-palette"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-button>
-        <ion-icon name="globe"></ion-icon>
-      </ion-fab-button>
-    </ion-fab-list-->
   </ion-fab>

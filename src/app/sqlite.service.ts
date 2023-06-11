@@ -10,13 +10,14 @@ let database: any;
   providedIn: 'root'
 })
 
-export class SQLiteService {
-
+export class SQLiteService 
+{
   dbName="";
   sqlite: any;
 
   constructor() {
   }
+
   //>
   async initializePlugin()
   {
@@ -50,6 +51,48 @@ export class SQLiteService {
       {
         db.executeSql("INSERT INTO tasks(libelle,datecreated,duree,description) VALUES(?,?,?,?)",[libelle,new Date().toUTCString(),duree,description]).then((resultInsert)=>{
           success(resultInsert.insertId);
+        }).catch(error=>{
+          fail(error);
+        });
+      }).catch(error=>{
+        fail(error);
+      });
+    });
+  }
+
+  //Suppression
+  deleteTask(id:any){
+    return new Promise((success,fail)=>{
+      let myTasks:any[];
+      let cnx= new SQLite();
+      cnx.create({
+        name:"ionic-capacitor.db",
+        location:"default"
+      }).then((db:SQLiteObject)=>
+      {
+        db.executeSql("DELETE FROM tasks WHERE id=?",[id]).then((resultInsert)=>{
+          success(resultInsert);
+        }).catch(error=>{
+          fail(error);
+        });
+      }).catch(error=>{
+        fail(error);
+      });
+    });
+  }
+
+  update(id:any,libelle:any,duree:any,description:any)
+  {
+    return new Promise((success,fail)=>{
+      let myTasks:any[];
+      let cnx= new SQLite();
+      cnx.create({
+        name:"ionic-capacitor.db",
+        location:"default"
+      }).then((db:SQLiteObject)=>
+      {
+        db.executeSql("UPDATE tasks SET libelle=?, duree=?,description=? WHERE id=?",[libelle,duree,description,id]).then((resultInsert)=>{
+          success(resultInsert);
         }).catch(error=>{
           fail(error);
         });

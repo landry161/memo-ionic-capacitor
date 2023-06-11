@@ -15,37 +15,23 @@ export class HomePage
 {
   task:string="";
   memo={libelle:"",description:"",duree:"",datecreated:""};
+  memoUpdate={id:"",libelle:"",description:"",duree:"",datecreated:""};
   addTask: boolean=false;
   tasks=Array();
   currentDate:string;
+  toUpdate:boolean=false;
   
   constructor(private loader:LoadingController,private _sqlite:SQLiteService)
   {
     const date= new Date();
-    const options={ weekday:'long',month:'long',day:'numeric'};
+    const options={weekday:'long',month:'long',day:'numeric'};
     this.currentDate=date.toLocaleDateString("fr-FR",{day:"numeric",weekday:"long",month:"long"});
     this.getAllTasks();
-    
   }
 
   //
-  async details(id:any,duree:any,description:any,datecreated:any){
-    const result = await ActionSheet.showActions({
-      title: 'Photo Options',
-      message: 'Select an option to perform',
-      options: [
-        {
-          title: 'Upload',
-        },
-        {
-          title: 'Share',
-        },
-        {
-          title: 'Remove',
-          style: ActionSheetButtonStyle.Destructive,
-        },
-      ],
-    });
+  edit(){
+    
   }
 
   ///
@@ -64,24 +50,50 @@ export class HomePage
 
   showForm(){
     this.addTask = !this.addTask;
-    //this.myTask = ''; 
+    this.toUpdate=false;
   }
 
-  async actionSheet(){
-    const result= await ActionSheet.showActions({
-      title:"Actions",
-      message:"Message ici",
-      options:[{
-        title:"Option 1"
-      },{
-        title:"Option 2"
-      },{
-        title:"Option 3"
-      }]
-    }).then((res:any)=>{
-      //alert("Ok");
+  //Mise à jour
+  updateTask()
+  {
+    //id:any,libelle:any,duree:any,description:any
+    this._sqlite.update(this.memoUpdate.id,this.memoUpdate.libelle,this.memoUpdate.duree,this.memoUpdate.description).then((result)=>
+    {
+      for (let index = 0; index < this.tasks.length; index++)
+      {
+        //const element = this.tasks[index];
+        if(this.memoUpdate.id==this.tasks[index]["id"]){
+          this.tasks[index]["libelle"]=this.memoUpdate.libelle;
+          this.tasks[index]["duree"]=this.memoUpdate.duree;
+          this.tasks[index]["description"]=this.memoUpdate.description;
+        }
+      }
+      this.showToast("Mise à jour effectuée avec succès");
+      this.toUpdate=false;
+    },error=>
+    {
+      this.showToast("Mise à jour impossible. Contacez votre administrateur");
+    })
+  }
+
+  //Détails
+  detailsTask(id:any,libelle:any,duree:any,description:any){
+    this.toUpdate=true;
+    this.memoUpdate.libelle=libelle;
+    this.memoUpdate.duree=duree;
+    this.memoUpdate.description=description;
+    this.memoUpdate.id=id;
+  }
+
+  //Suppression
+  delete(id:any)
+  {
+    this._sqlite.deleteTask(id).then((result)=>
+    {
+      this.showToast("Suppression effectuée avec succès");
+    },error=>{
+      this.showToast("Suppression impossible.Contactez votre administrateur");
     });
-    return result;
   }
 
   //
